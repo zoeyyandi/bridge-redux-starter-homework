@@ -1,39 +1,21 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
-import { connect } from 'react-redux';
-import { addProduct } from './actions';
+import {connect} from 'react-redux';
+import {addProduct} from './actions/index';
 import Chance from 'chance';
+
 export const chance = Chance();
-
-/* TODO: HOMEWORK!!!!!
- *
- * 1. Create the action to remove a product, and update the state to remove a product by id
- * 2. OPTIONAL: Create a more flexible product making form that will allow you to make a product with all field data, show this data too
- * 3. OPTIONAL: Create a filter search bar that allows you to shrink the list of products by whats typed!
- *            hint: it would help if you updated the global state with every keystroke!
-  * */
-
-const mapStateToProps = state => {
-  return ({
-  products: state.products,
-  whoIsTheBest: 'Yihua',
-  lowStockProducts: state.products.filter(prod => prod.stock && prod.stock < 4),
-})};
-
-const mapDispatchToProps = {
-  add: addProduct,
-};
 
 const Product = (props) => <div>{props.name}</div>;
 
 const DaBest = ({name}) => <h1>The Best: {name}</h1>;
 
-const AdderButton = ({add}) => <button onClick={ () => add({ name: 'Sofa' }) }>Add Sofa</button>
+const AdderButton = ({add}) => <button onClick={() => add({name: 'Sofa'})}>Add Sofa</button>
 
 class App extends Component {
 
 
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
@@ -48,17 +30,34 @@ class App extends Component {
   }
 
   render() {
-    const { products, add, whoIsTheBest } = this.props;
+    const {productList, add, whoIsTheBest} = this.props;
     debugger;
     return (
       <div>
-        <DaBest name={whoIsTheBest} />
-        {products.map(product => <Product name={product.name} key={product.id} />)}
+        <DaBest name={whoIsTheBest}/>
+        {productList.map(product => <Product name={product.name} key={product.id}/>)}
 
-        <AdderButton { ...this.props } />
+        <AdderButton {...this.props} />
       </div>
     );
   }
 }
+
+
+// React x REDUX STUFF
+
+const mapStateToProps = state => {
+  return {
+    productList: state.products.productList,
+    whoIsTheBest: 'Della',
+
+    // an example of how to derive state in the mapStateToProps function - this is a specific 'subset' of the full list
+    lowStockProducts: state.products.productList.filter(prod => prod.stock && prod.stock < 4),
+  }
+};
+
+const mapDispatchToProps = {
+  add: addProduct,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
